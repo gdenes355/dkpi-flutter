@@ -77,6 +77,21 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
   }
 
+  void _rescan() async {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      const SnackBar(content: Text('Scanning for devices, this may take a while…')),
+    );
+    try {
+      await context.read<DevicesCubit>().rescan();
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(const SnackBar(content: Text('Scan finished')));
+    } catch (e) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text('Scan failed: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final devicesState = context.watch<DevicesCubit>().state;
@@ -84,6 +99,29 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          if (devicesState.scanning)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'rescan') _rescan();
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'rescan',
+                enabled: !devicesState.scanning,
+                child: Text(devicesState.scanning ? 'Scanning…' : 'Re-scan'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -103,7 +141,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               itemCount: devicesState.devices.length,
               itemBuilder: (context, index) {
                 final device = devicesState.devices[index];
+                // Key by device id so each row keeps its own cubit when the
+                // list changes (e.g. after a re-scan adds devices), instead of
+                // reusing the cubit of whatever device used to be at this index.
                 return BlocProvider(
+                  key: ValueKey(device.id),
                   create: (context) => DeviceRowCubit(id: device.id)..loadStatus(),
                   child: DeviceRowWidget(
                     device: device,

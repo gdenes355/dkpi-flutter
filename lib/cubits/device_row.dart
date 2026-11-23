@@ -53,6 +53,16 @@ class DeviceRowCubit extends Cubit<DeviceRowState> {
     }
   }
 
+  void updateTargetTemperature(int targetTemperature) async {
+    try {
+      emit(state.copyWith(updating: true, error: ''));
+      final status = await ApiClient.updateTargetTemperature(id, targetTemperature);
+      emit(state.copyWith(status: status, updating: false, error: ''));
+    } catch (e) {
+      emit(state.copyWith(updating: false, error: e.toString()));
+    }
+  }
+
   void updateDeviceOn(bool on) async {
     try {
       emit(state.copyWith(updating: true, error: ''));

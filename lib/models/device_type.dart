@@ -1,13 +1,15 @@
 enum DeviceType {
   tuya,
-  dkpiDevice;
+  dkpiDevice,
+  toshibaHomeAc;
 
   /// Serialized string representation for API/JSON.
   /// dkpiDevice serializes as "DkpiD".
   String get serialized => switch (this) {
-        DeviceType.tuya => 'tuya',
-        DeviceType.dkpiDevice => 'DkpiD',
-      };
+    DeviceType.tuya => 'tuya',
+    DeviceType.dkpiDevice => 'DkpiD',
+    DeviceType.toshibaHomeAc => 'ToshibaHomeAc',
+  };
 
   @override
   String toString() => serialized;
@@ -17,6 +19,7 @@ enum DeviceType {
     return switch (value) {
       'tuya' => DeviceType.tuya,
       'DkpiD' => DeviceType.dkpiDevice,
+      'ToshibaHomeAc' => DeviceType.toshibaHomeAc,
       _ => null,
     };
   }

@@ -26,6 +26,15 @@ class ApiClient {
     return (jsonDecode(response.body) as List).map((json) => Device.fromJson(json)).toList();
   }
 
+  /// Forces the server to re-scan for devices. Can take a long time.
+  static Future<void> scanDevices() async {
+    final baseUrl = await getBaseUrl();
+    final response = await http.get(Uri.parse('$baseUrl/devices/scan'), headers: getHeaders());
+    if (response.statusCode != 200) {
+      throw Exception('Failed to scan devices (${response.statusCode})');
+    }
+  }
+
   static Future<DeviceStatus> getDeviceStatus(String id) async {
     final baseUrl = await getBaseUrl();
     final response = await http.get(Uri.parse('$baseUrl/devices/$id/status'), headers: getHeaders());
@@ -53,6 +62,15 @@ class ApiClient {
     final response = await http.patch(Uri.parse('$baseUrl/devices/$id/status'), headers: getHeaders(), body: jsonEncode({'additional_data': {'brightness': brightness}}));
     if (response.statusCode != 200) {
       throw Exception('Failed to update device brightness');
+    }
+    return DeviceStatus.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<DeviceStatus> updateTargetTemperature(String id, int targetTemperature) async {
+    final baseUrl = await getBaseUrl();
+    final response = await http.patch(Uri.parse('$baseUrl/devices/$id/status'), headers: getHeaders(), body: jsonEncode({'additional_data': {'target_temperature': targetTemperature}}));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update target temperature');
     }
     return DeviceStatus.fromJson(jsonDecode(response.body));
   }

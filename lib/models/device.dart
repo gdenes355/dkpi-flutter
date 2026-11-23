@@ -1,16 +1,21 @@
 import 'package:dkpi/models/device_type.dart';
+import 'package:dkpi/models/tuya_device_type.dart';
 
 class DeviceAdditionalData {
   final List<String> fields;
   final int? lastSeenTime;
   final int? maxBrightness;
   final List<String>? settableFields;
+  final String? version;
+  final TuyaDeviceType? tuyaDeviceType;
 
   const DeviceAdditionalData({
     required this.fields,
     this.lastSeenTime,
     this.maxBrightness,
     this.settableFields,
+    this.version,
+    this.tuyaDeviceType,
   });
 
   factory DeviceAdditionalData.fromJson(Map<String, dynamic> json) {
@@ -18,7 +23,13 @@ class DeviceAdditionalData {
       fields: List<String>.from(json['fields'] ?? []),
       lastSeenTime: json['last_seen_time'],
       maxBrightness: json['max_brightness'],
-      settableFields: json['settable_fields'] != null ? List<String>.from(json['settable_fields'] ?? []) : null,
+      settableFields: json['settable_fields'] != null
+          ? List<String>.from(json['settable_fields'] ?? [])
+          : null,
+      version: json['version'] as String?,
+      tuyaDeviceType: TuyaDeviceType.fromSerialized(
+        json['device_type'] as String?,
+      ),
     );
   }
 
@@ -28,6 +39,8 @@ class DeviceAdditionalData {
       'last_seen_time': lastSeenTime,
       'max_brightness': maxBrightness,
       'settable_fields': settableFields,
+      'version': version,
+      'device_type': tuyaDeviceType?.serialized,
     };
   }
 }
@@ -53,7 +66,9 @@ class Device {
       name: json['name'],
       ip: json['ip'],
       additionalData: json['additional_data'] != null
-          ? DeviceAdditionalData.fromJson(json['additional_data'] as Map<String, dynamic>)
+          ? DeviceAdditionalData.fromJson(
+              json['additional_data'] as Map<String, dynamic>,
+            )
           : null,
       deviceType: DeviceType.fromSerialized(json['device_type']),
     );
