@@ -11,6 +11,13 @@ enum DeviceType {
     DeviceType.toshibaHomeAc => 'ToshibaHomeAc',
   };
 
+  /// Human-readable name of the integration.
+  String get label => switch (this) {
+    DeviceType.tuya => 'Tuya',
+    DeviceType.dkpiDevice => 'DKPI',
+    DeviceType.toshibaHomeAc => 'Toshiba AC',
+  };
+
   @override
   String toString() => serialized;
 

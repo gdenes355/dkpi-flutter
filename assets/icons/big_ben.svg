@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Spire -->
+  <path fill="#000" d="M12 0 L13 4 L11 4 Z"/>
+  <!-- Pyramid roof -->
+  <path fill="#000" d="M11 4 L13 4 L15.5 8 L8.5 8 Z"/>
+  <!-- Belfry ledge -->
+  <rect fill="#000" x="8" y="8" width="8" height="1"/>
+  <!-- Clock block with clock face cut out -->
+  <path fill="#000" fill-rule="evenodd"
+        d="M8.5 9 H15.5 V15 H8.5 Z M12 9.5 A2.5 2.5 0 1 0 12 14.5 A2.5 2.5 0 1 0 12 9.5 Z"/>
+  <!-- Clock hands -->
+  <path stroke="#000" stroke-width="0.6" stroke-linecap="round" fill="none"
+        d="M12 12 V10.4 M12 12 H13.3"/>
+  <!-- Tower shaft with two window slits -->
+  <path fill="#000" fill-rule="evenodd"
+        d="M9 15 H15 V22 H9 Z M10.5 16.5 H11.5 V20.5 H10.5 Z M12.5 16.5 H13.5 V20.5 H12.5 Z"/>
+  <!-- Base -->
+  <rect fill="#000" x="7.5" y="22" width="9" height="2"/>
+</svg>

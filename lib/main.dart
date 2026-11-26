@@ -6,6 +6,8 @@ import 'package:dkpi/cubits/device_row.dart';
 import 'package:dkpi/widgets/device_row.dart';
 import 'package:dkpi/location_helper.dart';
 import 'package:dkpi/cubits/devices.dart';
+import 'package:dkpi/widgets/server_info_dialog.dart';
+import 'package:dkpi/widgets/history_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -112,12 +114,24 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'rescan') _rescan();
+              if (value == 'server_info') showServerInfoDialog(context);
+              if (value == 'history') {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HistoryPage()));
+              }
             },
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'rescan',
                 enabled: !devicesState.scanning,
                 child: Text(devicesState.scanning ? 'Scanning…' : 'Re-scan'),
+              ),
+              const PopupMenuItem(
+                value: 'history',
+                child: Text('History'),
+              ),
+              const PopupMenuItem(
+                value: 'server_info',
+                child: Text('Show server info'),
               ),
             ],
           ),
